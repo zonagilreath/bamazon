@@ -1,0 +1,26 @@
+{
+  "name": "bamazon",
+  "version": "1.0.0",
+  "description": "CLI, mysql-based storefront app",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zonagilreath/bamazon.git"
+  },
+  "author": "zonagilreath",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zonagilreath/bamazon/issues"
+  },
+  "homepage": "https://github.com/zonagilreath/bamazon#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "inquirer": "^6.2.2",
+    "mysql": "^2.16.0",
+    "nodemon": "^1.18.10"
+  }
+}
