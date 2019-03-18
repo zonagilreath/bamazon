@@ -34,7 +34,7 @@ function init(){
                 return choices
             };
 
-            prompts = [
+            const prompts = [
                 {
                     name: 'selection',
                     type: 'list',
