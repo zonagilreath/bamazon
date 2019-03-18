@@ -1,5 +1,6 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql');
+const table = require('table');
 
 const con = mysql.createConnection({
     host: 'localhost',
@@ -15,14 +16,31 @@ con.connect(function(err) {
 });
 
 function viewDepartmentSales() {
+    let sql = "\
+        SELECT departments.department_id, departments.department_name, departments.over_head_costs, products.department_name,\
+        SUM(products.product_sales) AS product_sales, (product_sales - departments.over_head_costs) AS total_profit\
+        FROM departments\
+        LEFT JOIN products ON departments.department_name = products.department_name\
+        GROUP BY departments.department_name\
+        ORDER BY departments.department_id;\
+    "
     con.query(
-        "SELECT product_name, price, stock_quantity FROM products",
+        sql,
         function(err, results){
             if (err) throw err;
+            let data = [["ID", "Name", "Overhead", "Product Sales", "Total Profit"]];
             results.forEach(item => {
-                string = `${item.product_name} for \$${item.price}, stock: ${item.stock_quantity}`;
-                console.log(string);
+                data.push(
+                    [
+                        item.department_id,
+                        item.department_name,
+                        item.over_head_costs,
+                        item.product_sales,
+                        item.total_profit
+                    ]
+                );
             });
+            console.log(table.table(data));
             init();
         }
     );
