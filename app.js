@@ -20,6 +20,11 @@ function updateQuantity(id, new_quant){
     con.query(sql_string, [{stock_quantity: new_quant}, {item_id: id}]);
 }
 
+function updateSales(id, total_sales) {
+    sql_string = 'UPDATE products SET ? WHERE ?'
+    con.query(sql_string, [{product_sales: total_sales}, {item_id: id}]);
+}
+
 function init(){
     con.query(
         "SELECT product_name, price, stock_quantity FROM products",
@@ -53,19 +58,21 @@ function init(){
             ];
 
             inquirer.prompt(prompts).then(response => {
-                console.log(response);
                 let id = response.selection;
                 let order_quantity = response.quantity;
-                let q_string = 'SELECT product_name, stock_quantity, price FROM products WHERE ?'
+                let q_string = 'SELECT product_name, stock_quantity, price, product_sales FROM products WHERE ?'
                 con.query(q_string, [{item_id: id}], function(err, results){
                     if (err) throw err;
                     item = results[0];
                     if (item.stock_quantity >= order_quantity){
                         new_quant = item.stock_quantity - order_quantity;
                         updateQuantity(id, new_quant);
+                        total = item.price * order_quantity;
+                        new_sales = parseFloat(item.product_sales) + total;
+                        updateSales(id, new_sales);
                         console.log(`
                         
-                        YOU BOUGHT ${order_quantity} ${item.product_name}(s) for \$${item.price * order_quantity}
+                        YOU BOUGHT ${order_quantity} ${item.product_name}(s) for \$${total}
                         THANKS!
                         
                         `)
@@ -81,8 +88,7 @@ function init(){
                     }
                 })
             });
-        });
-
-    // con.end();
+        }
+    );
 }
 
